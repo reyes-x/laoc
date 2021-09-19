@@ -1,5 +1,14 @@
 import Head from "next/head";
 import moment from "moment";
+import {
+  grommet,
+  Box,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Grommet,
+} from "grommet";
 
 moment.locale("pt-br");
 
@@ -16,15 +25,21 @@ function Home({ coins, rate_limits }) {
           <p>LAOC</p>
         </h1>
         <div className="grid">
-          {coins.map((coin, index) => (
-            <a className="card" key={index} href="{coin.coinmarketcap}">
-              <h3>
-                {coin.name} ({coin.symbol})
-              </h3>
-              <p>{coin.github}</p>
-              <p>{coin.last_updated}</p>
-            </a>
-          ))}
+          <Grommet theme={grommet}>
+            <Box pad="large" gap="medium" height="large" width="medium">
+              {coins.map((coin, index) => (
+                <Card pad="small" gap="medium" background="light-4" key={index}>
+                  <CardHeader>
+                    {coin.name} ({coin.symbol})
+                  </CardHeader>
+                  <CardBody></CardBody>
+                  <CardFooter pad="medium">
+                    Atualizado {coin.last_updated}
+                  </CardFooter>
+                </Card>
+              ))}
+            </Box>
+          </Grommet>
         </div>
       </main>
 
