@@ -1,6 +1,9 @@
 import Head from "next/head";
+import moment from "moment";
 
-function Home({ coins, items }) {
+moment.locale("pt-br");
+
+function Home({ coins, rate_limits }) {
   return (
     <div className="container">
       <Head>
@@ -13,7 +16,7 @@ function Home({ coins, items }) {
           <p>LAOC</p>
         </h1>
         <div className="grid">
-          {items.map((coin, index) => (
+          {coins.map((coin, index) => (
             <a className="card" key={index} href="{coin.coinmarketcap}">
               <h3>
                 {coin.name} ({coin.symbol})
@@ -33,6 +36,11 @@ function Home({ coins, items }) {
         >
           Criado por Roger Souza
         </a>
+        <span>
+          <p>
+            {rate_limits.limit} / {rate_limits.used} / {rate_limits.remaining}
+          </p>
+        </span>
       </footer>
 
       <style jsx>{`
@@ -62,6 +70,11 @@ function Home({ coins, items }) {
           justify-content: center;
           align-items: center;
         }
+
+        footer p {
+          margin-top: 10px;
+          border-top: 1px solid #eaeaea;
+        }
       `}</style>
 
       <style jsx global>{`
@@ -82,60 +95,55 @@ function Home({ coins, items }) {
   );
 }
 
-// export async function getStaticProps() {
-//   const res_bitcoin = await fetch(
-//     "https://api.github.com/repos/bitcoin/bitcoin/commits/master"
-//   );
-
-//   const bitcoin = await res_bitcoin.json();
-
-//   return {
-//     props: {
-//       bitcoin,
-//     },
-//   };
-// }
-
 export async function getStaticProps() {
-  // console.dir(new Date(1632058452 * 1000));
+  const rate_limits = await getRateLimits();
 
   const res = await fetch("https://laoc.vercel.app/coins.json");
 
   const data = await res.json();
 
-  const coins = data.coins;
-
-  const items = await getInfoOfRepos(coins);
+  const coins = await getInfoOfRepos(data.coins);
 
   return {
     props: {
       coins,
-      items,
+      rate_limits,
     },
   };
+}
+
+async function getRateLimits() {
+  const res = await fetch("https://api.github.com/rate_limit", {
+    method: "GET",
+    headers: { Authorization: "Basic " + process.env.GITHUB_AUTH },
+  });
+
+  const rate_limit = await res.json();
+
+  return rate_limit.resources.core;
 }
 
 async function getInfoOfRepos(coins) {
   let items = [];
 
   for (const [idx, coin] of coins.entries()) {
-    const res = await fetch(coin.repo);
+    const res = await fetch(coin.repo, {
+      method: "GET",
+      headers: { Authorization: "Basic " + process.env.GITHUB_AUTH },
+    });
 
     const coin_res = await res.json();
 
-    console.dir(coin_res);
-
     items.push({
+      index: idx,
       name: coin.name,
       symbol: coin.symbol,
       info: coin.info,
       repo: coin.repo,
       show: coin.show,
-      // last_updated: coin_res.commit.author.date,
+      last_updated: moment(coin_res.commit.author.date).fromNow(),
     });
   }
-
-  console.log("Finished!");
 
   return items;
 }
