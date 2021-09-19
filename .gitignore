@@ -32,3 +32,6 @@ yarn-error.log*
 # IDE
 .vscode
 .vscode*
+
+# Project
+package-lock.json
