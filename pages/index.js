@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-function Home({ coins }) {
+function Home({ coins, items }) {
   return (
     <div className="container">
       <Head>
@@ -13,12 +13,13 @@ function Home({ coins }) {
           <p>LAOC</p>
         </h1>
         <div className="grid">
-          {coins.map((coin, index) => (
+          {items.map((coin, index) => (
             <a className="card" key={index} href="{coin.coinmarketcap}">
               <h3>
                 {coin.name} ({coin.symbol})
               </h3>
               <p>{coin.github}</p>
+              <p>{coin.last_updated}</p>
             </a>
           ))}
         </div>
@@ -96,27 +97,47 @@ function Home({ coins }) {
 // }
 
 export async function getStaticProps() {
+  // console.dir(new Date(1632058452 * 1000));
+
   const res = await fetch("https://laoc.vercel.app/coins.json");
 
   const data = await res.json();
 
   const coins = data.coins;
 
-  await getRepos(coins);
+  const items = await getInfoOfRepos(coins);
 
   return {
     props: {
       coins,
+      items,
     },
   };
 }
 
-async function getRepos(coins) {
-  await coins.forEach(async (coin) => {
-    const repo = await fetch(coin.repo);
-    const res = await repo.json();
-    console.log(res.commit.author);
-  });
+async function getInfoOfRepos(coins) {
+  let items = [];
+
+  for (const [idx, coin] of coins.entries()) {
+    const res = await fetch(coin.repo);
+
+    const coin_res = await res.json();
+
+    console.dir(coin_res);
+
+    items.push({
+      name: coin.name,
+      symbol: coin.symbol,
+      info: coin.info,
+      repo: coin.repo,
+      show: coin.show,
+      last_updated: coin_res.commit.author.date,
+    });
+  }
+
+  console.log("Finished!");
+
+  return items;
 }
 
 export default Home;
