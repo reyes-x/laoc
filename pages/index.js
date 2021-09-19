@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-function Home({ bitcoin, ethereum }) {
+function Home({ coins }) {
   return (
     <div className="container">
       <Head>
@@ -13,28 +13,14 @@ function Home({ bitcoin, ethereum }) {
           <p>LAOC</p>
         </h1>
         <div className="grid">
-          <a
-            href="https://coinmarketcap.com/currencies/bitcoin/"
-            className="card"
-          >
-            <h3>Bitcoin</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-            <p>{bitcoin.sha}</p>
-            <p>{bitcoin.commit.author.name}</p>
-            <p>{bitcoin.commit.author.email}</p>
-            <p>{bitcoin.commit.author.date}</p>
-          </a>
-          <a
-            href="https://coinmarketcap.com/currencies/ethereum/"
-            className="card"
-          >
-            <h3>Ethereum</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-            <p>{ethereum.sha}</p>
-            <p>{ethereum.commit.author.name}</p>
-            <p>{ethereum.commit.author.email}</p>
-            <p>{ethereum.commit.author.date}</p>
-          </a>
+          {coins.map((coin, index) => (
+            <a className="card" key={index} href="{coin.coinmarketcap}">
+              <h3>
+                {coin.name} ({coin.symbol})
+              </h3>
+              <p>{coin.github}</p>
+            </a>
+          ))}
         </div>
       </main>
 
@@ -95,29 +81,42 @@ function Home({ bitcoin, ethereum }) {
   );
 }
 
+// export async function getStaticProps() {
+//   const res_bitcoin = await fetch(
+//     "https://api.github.com/repos/bitcoin/bitcoin/commits/master"
+//   );
+
+//   const bitcoin = await res_bitcoin.json();
+
+//   return {
+//     props: {
+//       bitcoin,
+//     },
+//   };
+// }
+
 export async function getStaticProps() {
-  const res_bitcoin = await fetch(
-    "https://api.github.com/repos/bitcoin/bitcoin/commits/master"
-  );
+  const res = await fetch("https://laoc.vercel.app/coins.json");
 
-  const bitcoin = await res_bitcoin.json();
+  const data = await res.json();
 
-  console.dir(bitcoin);
+  const coins = data.coins;
 
-  const res_ethereum = await fetch(
-    "https://api.github.com/repos/ethereum/go-ethereum/commits/master"
-  );
-
-  const ethereum = await res_ethereum.json();
-
-  console.dir(ethereum);
+  await getRepos(coins);
 
   return {
     props: {
-      bitcoin,
-      ethereum,
+      coins,
     },
   };
+}
+
+async function getRepos(coins) {
+  await coins.forEach(async (coin) => {
+    const repo = await fetch(coin.repo);
+    const res = await repo.json();
+    console.log(res.commit.author);
+  });
 }
 
 export default Home;

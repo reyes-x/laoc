@@ -3,29 +3,29 @@
         {
             "name": "BITCOIN",
             "symbol": "BTC",
-            "coinmarketcap": "https://coinmarketcap.com/currencies/bitcoin/",
-            "github": "https://api.github.com/repos/bitcoin/bitcoin/commits/master",
+            "info": "https://coinmarketcap.com/currencies/bitcoin/",
+            "repo": "https://api.github.com/repos/bitcoin/bitcoin/commits/master",
             "show": true
         },
         {
             "name": "Ethereum",
             "symbol": "ETH",
-            "coinmarketcap": "https://coinmarketcap.com/currencies/ethereum",
-            "github": "https://api.github.com/repos/ethereum/go-ethereum/commits/master",
+            "info": "https://coinmarketcap.com/currencies/ethereum",
+            "repo": "https://api.github.com/repos/ethereum/go-ethereum/commits/master",
             "show": true
         },
         {
             "name": "Cardano",
             "symbol": "ADA",
-            "coinmarketcap": "https://coinmarketcap.com/currencies/cardano",
-            "github": "https://api.github.com/repos/input-output-hk/cardano-wallet/commits/master",
+            "info": "https://coinmarketcap.com/currencies/cardano",
+            "repo": "https://api.github.com/repos/input-output-hk/cardano-wallet/commits/master",
             "show": true
         },
         {
             "name": "Binance Coin",
             "symbol": "BNB",
-            "coinmarketcap": "https://coinmarketcap.com/currencies/binance-coin",
-            "github": "https://api.github.com/repos/binance-chain/bsc/commits/master",
+            "info": "https://coinmarketcap.com/currencies/binance-coin",
+            "repo": "https://api.github.com/repos/binance-chain/bsc/commits/master",
             "show": true
         }
     ]
