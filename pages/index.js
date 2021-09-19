@@ -131,7 +131,7 @@ async function getInfoOfRepos(coins) {
       info: coin.info,
       repo: coin.repo,
       show: coin.show,
-      last_updated: coin_res.commit.author.date,
+      // last_updated: coin_res.commit.author.date,
     });
   }
 
