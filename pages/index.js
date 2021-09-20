@@ -28,7 +28,14 @@ function Home({ coins, rate_limits }) {
           <Grommet theme={grommet}>
             <Box pad="large" gap="medium" height="large" width="medium">
               {coins.map((coin, index) => (
-                <Card pad="small" gap="medium" background="light-4" key={index}>
+                <Card
+                  pad="small"
+                  gap="medium"
+                  height="large"
+                  width="medium"
+                  background="light-4"
+                  key={index}
+                >
                   <CardHeader>
                     {coin.name} ({coin.symbol})
                   </CardHeader>
