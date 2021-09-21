@@ -150,7 +150,6 @@ async function getInfoOfRepos(coins) {
 
   for (const [idx, coin] of coins.entries()) {
     const res = await fetch(coin.repo, {
-      method: "GET",
       headers: { Authorization: "Basic " + process.env.GITHUB_AUTH },
     });
 
